@@ -1,6 +1,6 @@
 <template>
   <BaseLayout>
-    <Datatable class-table="table-striped  table-bordered" :column="column" :data="users"  size="sm"></Datatable>
+    <Datatable class-table="table-striped  table-bordered table-hover" :column="column" :data="users"  ></Datatable>
   </BaseLayout>
 </template>
 
