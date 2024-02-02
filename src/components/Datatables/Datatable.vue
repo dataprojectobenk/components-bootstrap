@@ -13,8 +13,8 @@
                 </div>
             </div>
             <div class="input-group col mt-1 mt-md-0 " :class="prop.size == 'sm' ? 'input-group-sm' : ''">
-                <input type="text" class="form-control" :class="prop.size == 'sm' ? 'form-control-sm' : ''" placeholder="Cari..."
-                    v-model="config.search" @keyup="()=>config.page=1">
+                <input type="text" class="form-control" :class="prop.size == 'sm' ? 'form-control-sm' : ''"
+                    placeholder="Cari..." v-model="config.search" @keyup="() => config.page = 1">
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
             </div>
         </div>
@@ -28,9 +28,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="align-middle " v-for="item in dataTable.data">
-                    <td v-if="prop.selected" >
-                        <input type="checkbox" :value="item.id" v-model="selected" @change="emits('onSelected',selected)">
+                <tr class="align-middle " v-for="item in dataTable.data" @click="emits('onEdit',item.id)">
+                    <td v-if="prop.selected">
+                        <input type="checkbox" :value="item.id" v-model="selected" @change="emits('onSelected', selected)">
                     </td>
                     <td v-for="i in  prop.column">{{ item[i.data] }}</td>
                 </tr>
@@ -40,7 +40,7 @@
         <div
             class="justify-content-ceconfig.value.page-1nter d-flex flex-column-reverse flex-md-row justify-content-md-between align-content-center">
             <div class="info text-center " :class="prop.size == 'sm' ? 'small' : ''">
-                <span class="text-mute">Menampilkan {{ dataTable.filter}} dari {{ prop.data.length }}</span>
+                <span class="text-mute">Menampilkan {{ dataTable.filter }} dari {{ prop.data.length }}</span>
             </div>
             <div class="navigation">
                 <!-- pagination -->
@@ -54,8 +54,9 @@
                             </button>
                         </li>
                         <li class="page-item" v-for="i in Math.ceil(dataTable.filter / config.perPage)">
-                            <button class="page-link" :class="config.page == i ? 'active' : ''" @click="() => config.page = i">{{ i
-                            }}</button>
+                            <button class="page-link" :class="config.page == i ? 'active' : ''"
+                                @click="() => config.page = i">{{ i
+                                }}</button>
                         </li>
                         <li class="page-item">
                             <a class="page-link" href="#" aria-label="Next"
@@ -73,8 +74,8 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
-const selected=ref([])
-const selectAll=ref(false)
+const selected = ref([])
+const selectAll = ref(false)
 const config = ref({
     perPage: 10,
     page: 1,
@@ -94,17 +95,17 @@ const prop = defineProps({
         default: 'md',
         type: String
     },
-    filter:{
-        default:[],
-        type:Array
+    filter: {
+        default: [],
+        type: Array
     },
-    selected:{
-        default:false,
-        type:Boolean
+    selected: {
+        default: false,
+        type: Boolean
     }
 })
 
-const emits = defineEmits(['onSelected','onEdit'])
+const emits = defineEmits(['onSelected', 'onEdit'])
 
 const dataTable = computed(() => {
     let dt = {
@@ -113,24 +114,24 @@ const dataTable = computed(() => {
         data: prop.data
     }
     // filter data
-    if(config.value.search.length>0){
-        let filter=[]
-        if(prop.filter.length>0){
+    if (config.value.search.length > 0) {
+        let filter = []
+        if (prop.filter.length > 0) {
             filter = prop.filter
-        }else{
-            prop.column.forEach(el=>{filter.push(el.data)})
+        } else {
+            prop.column.forEach(el => { filter.push(el.data) })
         }
 
         // filter data by search
-        dt.data = dt.data.filter(el=>{
-            let isExists=false
-            filter.forEach(item=>{
-                if(el[item].toUpperCase().includes(config.value.search.toUpperCase())){
+        dt.data = dt.data.filter(el => {
+            let isExists = false
+            filter.forEach(item => {
+                if (el[item].toUpperCase().includes(config.value.search.toUpperCase())) {
                     isExists = true
-                    return 
+                    return
                 }
             })
-            if(isExists) return el
+            if (isExists) return el
         })
         dt.filter = dt.data.length
     }
@@ -141,20 +142,26 @@ const dataTable = computed(() => {
     return dt
 })
 
-watch(selectAll,()=>{
-    document.querySelectorAll('#data-table #table tbody input[type="checkbox"]').forEach(el=>{
-        
-    })
+watch(selectAll, () => {
+    if (selectAll.value) {
+        selected.value = []
+        document.querySelectorAll('#data-table #table tbody input[type="checkbox"]').forEach(el => {
+            selected.value.push(el.value)
+        })
+    }else{
+        selected.value=[]
+    }
 })
 </script>
 
 <style lang="scss" scoped>
-#data-table{
-    tbody tr td{
+#data-table {
+    tbody tr td {
         cursor: pointer;
     }
-    #table{
-        tbody tr{
+
+    #table {
+        tbody tr {
             background-color: black;
         }
     }
