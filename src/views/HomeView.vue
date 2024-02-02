@@ -1,27 +1,38 @@
 <template>
   <BaseLayout>
-    <Datatable class-table="table-striped  table-bordered" :column="column" :data="dataSiswa" size="sm"></Datatable>
+    <Datatable class-table="table-striped  table-bordered" :column="column" :data="users"  size="sm"></Datatable>
   </BaseLayout>
 </template>
 
 <script setup>
 import BaseLayout from '@/components/BaseLayout.vue';
 import Datatable from "../components/Datatables/Datatable.vue";
+import axios from 'axios'
+import { ref,onMounted } from 'vue';
+
+const url = import.meta.env.VITE_API_URL
+const users= ref([])
 
 const column = [
-  { name: 'Nama lengkap', data: 'nama' },
-  { name: 'Alamat', data: 'alamat' },
-  { name: 'Kelas', data: 'kelas' },
+  { name: 'Nama depan', data: 'first_name' },
+  { name: 'Nama belakang', data: 'last_name' },
+  { name: 'Email', data: 'email' },
+  { name: 'Jenis kelamin', data: 'gender' },
 ]
 
-const dataSiswa = [
-  { id: 1, nama: 'Jono', alamat: 'Citalang', kelas: 10 },
-  { id: 2, nama: 'Jono', alamat: 'Citalang', kelas: 10 },
-  { id: 3, nama: 'Jono', alamat: 'Citalang', kelas: 10 },
-  { id: 4, nama: 'Jono', alamat: 'Citalang', kelas: 10 },
-  { id: 5, nama: 'Jono', alamat: 'Citalang', kelas: 10 },
-  { id: 6, nama: 'Jono', alamat: 'Citalang', kelas: 10 },
-]
+const getUser=async()=>{
+  await axios({
+    method:'get',
+    url:url+'users'
+  }).then(res=>{
+    users.value = res.data
+  })
+}
+
+onMounted(async()=>{
+  await getUser()
+})
+
 </script>
 
 <style lang="scss" scoped></style>
