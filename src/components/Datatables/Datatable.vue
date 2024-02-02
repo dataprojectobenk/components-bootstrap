@@ -23,13 +23,15 @@
         <table id="table" class="table mt-2" :class="prop.size == 'sm' ? prop.classTable + ' table-sm' : prop.classTable">
             <thead>
                 <tr class="align-middle">
-                    <th>#</th>
+                    <th v-if="prop.selected"><input type="checkbox" v-model="selectAll"></th>
                     <th v-for="item in prop.column">{{ item.name }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="align-middle " v-for="item in dataTable.data">
-                    <td><button class="btn btn-sm  px-1 py-0"><i class="bi bi-dash"></i></button></td>
+                    <td v-if="prop.selected" >
+                        <input type="checkbox" :value="item.id" v-model="selected" @change="emits('onSelected',selected)">
+                    </td>
                     <td v-for="i in  prop.column">{{ item[i.data] }}</td>
                 </tr>
             </tbody>
@@ -70,7 +72,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+const selected=ref([])
+const selectAll=ref(false)
 const config = ref({
     perPage: 10,
     page: 1,
@@ -93,8 +97,14 @@ const prop = defineProps({
     filter:{
         default:[],
         type:Array
+    },
+    selected:{
+        default:false,
+        type:Boolean
     }
 })
+
+const emits = defineEmits(['onSelected','onEdit'])
 
 const dataTable = computed(() => {
     let dt = {
@@ -131,11 +141,16 @@ const dataTable = computed(() => {
     return dt
 })
 
+watch(selectAll,()=>{
+    document.querySelectorAll('#data-table #table tbody input[type="checkbox"]').forEach(el=>{
+        
+    })
+})
 </script>
 
 <style lang="scss" scoped>
 #data-table{
-    tbody tr{
+    tbody tr td{
         cursor: pointer;
     }
     #table{
