@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="align-middle " v-for="item in dataTable.data" @click="emits('onEdit',item.id)">
+                <tr class="align-middle " v-for="item in dataTable.data" @click="emits('onEdit', item.id)">
                     <td v-if="prop.selected">
                         <input type="checkbox" :value="item.id" v-model="selected" @change="emits('onSelected', selected)">
                     </td>
@@ -105,7 +105,7 @@ const prop = defineProps({
     }
 })
 
-const emits = defineEmits(['onSelected', 'onEdit'])
+const emits = defineEmits(['onSelected', 'onEdit','onSelectAll'])
 
 const dataTable = computed(() => {
     let dt = {
@@ -148,9 +148,10 @@ watch(selectAll, () => {
         document.querySelectorAll('#data-table #table tbody input[type="checkbox"]').forEach(el => {
             selected.value.push(el.value)
         })
-    }else{
-        selected.value=[]
+    } else {
+        selected.value = []
     }
+    emits('onSelectAll',selected.value)
 })
 </script>
 
@@ -158,12 +159,6 @@ watch(selectAll, () => {
 #data-table {
     tbody tr td {
         cursor: pointer;
-    }
-
-    #table {
-        tbody tr {
-            background-color: black;
-        }
     }
 }
 </style>
