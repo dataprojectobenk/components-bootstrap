@@ -35,4 +35,8 @@ onMounted(async()=>{
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" >
+  body.body-template{
+    font-size: .875rem;
+  }
+</style>
